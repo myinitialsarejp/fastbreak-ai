@@ -1,39 +1,17 @@
-enum Sports {
-  BASEBALL = "Baseball",
-  BASKETBALL = "Basketball",
-  FOOTBALL = "Football",
-  HOCKEY = "Hockey",
-  PICKLEBALL = "Pickleball",
-  SOCCER = "Soccer",
-  SWIMMING = "Swimming",
-  TENNIS = "Tennis",
-  VOLLEYBALL = "Volleyball",
-}
+import { z } from "zod";
+import Sports from "../enum/sports";
+import Venue from "../enum/venue";
 
-enum Venue {
-    STADIUM_A = "Stadium A",
-    STADIUM_B = "Stadium B",
-    ARENA_A = "Arena A",
-    FIELD_A = "Field A",
-    COURT_A = "Court A",
-}
-
-const userSchema = {
-  type: 'object',
-  properties: {
-    id: { type: 'number', minimum: 1 },
-    eventName: { type: 'string', minLength: 3 },
-    sportType: { type: Sports },
-    dateTime: { type: 'string', format: 'date-time' },
-    description: { type: 'string', minLength: 10},
-    venues: {
-      type: 'array',
-      items: {
-        type: Venue,
-      },
-      minItems: 1,
-      uniqueItems: true,
-      }
-  },
-  required: ['id', 'eventName', 'sportType', 'dateTime', 'description'],
-};
+export const eventSchema = z.object({
+  id: z.number().min(1),
+  eventName: z.string().min(3),
+  sportType: z.enum(Sports),
+  dateTime: z.iso.datetime(),
+  description: z.string().min(10),
+  venues: z.array(z.enum(Venue))
+    .min(1)
+    .refine(
+      (arr) => new Set(arr).size === arr.length,
+      "venues must contain unique items"
+    ),
+});
