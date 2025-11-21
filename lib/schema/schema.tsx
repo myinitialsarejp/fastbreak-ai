@@ -1,11 +1,11 @@
 import { z } from "zod";
-import Sports from "../enum/sports";
+import Sport from "../enum/sports";
 import Venue from "../enum/venue";
 
 export const eventSchema = z.object({
-  id: z.number().min(1),
+  id: z.uuid(),
   eventName: z.string().min(3),
-  sportType: z.enum(Sports),
+  sportType: z.enum(Sport),
   dateTime: z.iso.datetime(),
   description: z.string().min(10),
   venues: z.array(z.enum(Venue))

@@ -1,3 +1,4 @@
+import { UUID } from "crypto";
 import Sports from "../enum/sports";
 import Venue from "../enum/venue";
 
@@ -5,7 +6,7 @@ type SportType = (typeof Sports)[number];
 type VenueType = (typeof Venue)[number];
 
 export class Event {
-  id: number;
+  id: UUID;
   eventName: string;
   sportType: SportType;
   dateTime: string;       // ISO date-time
@@ -13,7 +14,7 @@ export class Event {
   venues: VenueType[];
 
   constructor(data: {
-    id: number;
+    id: UUID;
     eventName: string;
     sportType: SportType;
     dateTime: string;
