@@ -5,10 +5,16 @@ export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   })
+  
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  /**
+   * process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+   */
+  
+  const supabase = createServerClient(
+    "https://kqjeheilkjsufafevpwl.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtxamVoZWlsa2pzdWZhZmV2cHdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2OTIwMjksImV4cCI6MjA3OTI2ODAyOX0.1R80jG84gpe0ayp1ckxRTEHsjdWI9edCENRaIoaqkRg",
     {
       cookies: {
         getAll() {
