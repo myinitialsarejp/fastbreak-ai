@@ -22,34 +22,43 @@ import {
   FormMessage,
 } from "./ui/form";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
   
 
 function LoginCard() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isEmailLoading, setIsEmailLoading] = useState<boolean>(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
+    const router = useRouter();
   const form = useForm({
     defaultValues: {
       email: "",
+      password: "",
     },
   });
 
   // Email OTP submission handler
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
-    setIsLoading(true);
+    setIsEmailLoading(true);
 
     setTimeout(() => {
-      setIsLoading(false);
+      setIsEmailLoading(false);
     }, 3000);
   }
 
   // Google OAuth submission handler
   async function onSubmitGoogle() {
-    setIsLoading(true);
+    setIsGoogleLoading(true);
 
     setTimeout(() => {
-      setIsLoading(false);
+      setIsGoogleLoading(false);
     }, 3000);
   }
+
+  // Sign Up button handler
+    function onClickSignUp() {
+        router.push("/signup");
+    }
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -67,11 +76,25 @@ function LoginCard() {
                 name="email"
                 control={form.control}
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="pt-4">
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                         
                       <Input placeholder="email@example.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="password"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className="pt-4">
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                        
+                      <Input type="password" placeholder="Your password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -82,8 +105,8 @@ function LoginCard() {
         </CardContent>
 
         <CardFooter className="flex-col gap-2">
-          <Button onClick={onSubmit} disabled={isLoading} className="w-full">
-            {isLoading && <LoaderIcon className="animate-spin" />}
+          <Button onClick={onSubmit} disabled={isEmailLoading} className="w-full">
+            {isEmailLoading && <LoaderIcon className="animate-spin" />}
             Sign In with Email
           </Button>
           <div className="relative">
@@ -98,10 +121,10 @@ function LoginCard() {
             onClick={onSubmitGoogle}
             variant="outline"
             type="button"
-            disabled={isLoading}
+            disabled={isGoogleLoading}
             className="w-full"
           >
-            {isLoading ? (
+            {isGoogleLoading ? (
               <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
             ) : (
               <img src="/google.svg.png" alt="Google" width={18} height={18} />
@@ -110,7 +133,9 @@ function LoginCard() {
           </Button>
           <div className="mt-8 text-center text-sm">
             Don't have an account?{' '}
-            <Button variant="link"><Link href="/signup">Sign Up</Link></Button>
+            <Button variant="link" onClick={onClickSignUp}>
+              Sign Up
+            </Button>
           </div>
         </CardFooter>
       </Card>

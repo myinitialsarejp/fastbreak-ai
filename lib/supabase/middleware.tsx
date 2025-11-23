@@ -7,14 +7,20 @@ export async function updateSession(request: NextRequest) {
   })
   
 
-  /**
-   * process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-   */
-  
-  const supabase = createServerClient(
-    "https://kqjeheilkjsufafevpwl.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtxamVoZWlsa2pzdWZhZmV2cHdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2OTIwMjksImV4cCI6MjA3OTI2ODAyOX0.1R80jG84gpe0ayp1ckxRTEHsjdWI9edCENRaIoaqkRg",
+  // Read Supabase connection values from environment for local development.
+  const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    // If env vars are missing, warn and continue without attempting to validate a session.
+    // This prevents hard crashes during local development if the developer hasn't created an .env.local yet.
+    console.warn(
+      "Missing Supabase env vars: set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY in .env.local"
+    )
+    return supabaseResponse
+  }
+
+  const supabase = createServerClient(SUPABASE_URL, SUPABASE_KEY,
     {
       cookies: {
         getAll() {
@@ -43,7 +49,8 @@ export async function updateSession(request: NextRequest) {
   if (
     !user &&
     !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth')
+    !request.nextUrl.pathname.startsWith('/auth') &&
+    !request.nextUrl.pathname.startsWith('/signup')
   ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone()
