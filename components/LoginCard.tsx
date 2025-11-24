@@ -21,14 +21,13 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-  
+import { signIn, signInWithGoogle, signInWithGoogleV2 } from "@/app/actions/authActions";
 
 function LoginCard() {
   const [isEmailLoading, setIsEmailLoading] = useState<boolean>(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
-    const router = useRouter();
+  const router = useRouter();
   const form = useForm({
     defaultValues: {
       email: "",
@@ -37,35 +36,45 @@ function LoginCard() {
   });
 
   // Email OTP submission handler
-  async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault();
+  async function onSubmit() {
     setIsEmailLoading(true);
-
-    setTimeout(() => {
-      setIsEmailLoading(false);
-    }, 3000);
+    const formData = form.getValues();
+    const { data, error } = await signIn(formData.email, formData.password);
+    if (error) {
+      console.log("Error signing in:", error.message);
+    } else {
+      router.push("/");
+    }
+    setIsEmailLoading(false);
   }
 
   // Google OAuth submission handler
   async function onSubmitGoogle() {
     setIsGoogleLoading(true);
+    try {
+      const authUrl = await signInWithGoogleV2();
+      // Redirect the browser to the authorization URL
+        router.push(authUrl);
+    } catch (error) {
+      console.error("OAuth failed:", error);
+    }
+          setIsGoogleLoading(false);
 
-    setTimeout(() => {
-      setIsGoogleLoading(false);
-    }, 3000);
   }
 
   // Sign Up button handler
-    function onClickSignUp() {
-        router.push("/signup");
-    }
+  function onClickSignUp() {
+    router.push("/signup");
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="flex justify-center">Login to your account</CardTitle>
-          <CardDescription className = "flex justify-center">
+          <CardTitle className="flex justify-center">
+            Login to your account
+          </CardTitle>
+          <CardDescription className="flex justify-center">
             Enter your email below to login to your account
           </CardDescription>
         </CardHeader>
@@ -79,7 +88,6 @@ function LoginCard() {
                   <FormItem className="pt-4">
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                        
                       <Input placeholder="email@example.com" {...field} />
                     </FormControl>
                     <FormMessage />
@@ -93,8 +101,11 @@ function LoginCard() {
                   <FormItem className="pt-4">
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                        
-                      <Input type="password" placeholder="Your password" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="Your password"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -105,12 +116,15 @@ function LoginCard() {
         </CardContent>
 
         <CardFooter className="flex-col gap-2">
-          <Button onClick={onSubmit} disabled={isEmailLoading} className="w-full">
+          <Button
+            onClick={onSubmit}
+            disabled={isEmailLoading}
+            className="w-full"
+          >
             {isEmailLoading && <LoaderIcon className="animate-spin" />}
             Sign In with Email
           </Button>
           <div className="relative">
-            
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background text-muted-foreground px-2">
                 Or continue with
@@ -132,7 +146,7 @@ function LoginCard() {
             Google
           </Button>
           <div className="mt-8 text-center text-sm">
-            Don't have an account?{' '}
+            Don't have an account?{" "}
             <Button variant="link" onClick={onClickSignUp}>
               Sign Up
             </Button>

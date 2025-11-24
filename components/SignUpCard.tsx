@@ -22,6 +22,8 @@ import {
   FormMessage,
 } from "./ui/form";
 import { useRouter } from "next/navigation";
+import { signUp, signInWithGoogle } from "@/app/actions/authActions";
+import { set } from "zod";
 
 function SignUpCard() {
   const [isEmailLoading, setIsEmailLoading] = useState<boolean>(false);
@@ -37,22 +39,37 @@ function SignUpCard() {
   });
 
   // Email OTP submission handler
-  async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault();
+  async function onSubmit() {
     setIsEmailLoading(true);
 
-    setTimeout(() => {
-      setIsEmailLoading(false);
-    }, 3000);
+    let formData = form.getValues();
+    let { data, error } = await signUp(formData.email, formData.password)
+
+    if(error) {
+        console.log("Error signing up:", error.message);
+    }
+    else{
+        console.log("Sign up successful:", data);
+    }
+
+    setIsEmailLoading(false);
   }
 
   // Google OAuth submission handler
   async function onSubmitGoogle() {
     setIsGoogleLoading(true);
 
-    setTimeout(() => {
-      setIsGoogleLoading(false);
-    }, 3000);
+    let {data, error} = await signInWithGoogle();
+
+    if(error) {
+        console.log("Error signing up:", error.message);
+    }
+    else{
+        console.log("Sign up with Google successful:", data);
+        router.push("/");
+    }
+
+    setIsGoogleLoading(false);
   }
 
   // Navigate to Log In button handler
