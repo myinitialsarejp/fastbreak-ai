@@ -22,7 +22,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import { useRouter } from "next/navigation";
-import { signIn, signInWithGoogle, signInWithGoogleV2 } from "@/app/actions/authActions";
+import { signIn, signInWithGoogle} from "@/app/actions/authActions";
 
 function LoginCard() {
   const [isEmailLoading, setIsEmailLoading] = useState<boolean>(false);
@@ -52,13 +52,16 @@ function LoginCard() {
   async function onSubmitGoogle() {
     setIsGoogleLoading(true);
     try {
-      const authUrl = await signInWithGoogleV2();
+      const authUrl = await signInWithGoogle();
       // Redirect the browser to the authorization URL
         router.push(authUrl);
     } catch (error) {
       console.error("OAuth failed:", error);
     }
-          setIsGoogleLoading(false);
+
+    setTimeout(() => {
+      setIsGoogleLoading(false);
+    }, 3000);
 
   }
 

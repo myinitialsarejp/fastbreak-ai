@@ -58,18 +58,17 @@ function SignUpCard() {
   // Google OAuth submission handler
   async function onSubmitGoogle() {
     setIsGoogleLoading(true);
-
-    let {data, error} = await signInWithGoogle();
-
-    if(error) {
-        console.log("Error signing up:", error.message);
-    }
-    else{
-        console.log("Sign up with Google successful:", data);
-        router.push("/");
+    try {
+      const authUrl = await signInWithGoogle();
+      // Redirect the browser to the authorization URL
+        router.push(authUrl);
+    } catch (error) {
+      console.error("OAuth failed:", error);
     }
 
-    setIsGoogleLoading(false);
+    setTimeout(() => {
+      setIsGoogleLoading(false);
+    }, 3000);
   }
 
   // Navigate to Log In button handler
