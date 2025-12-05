@@ -8,6 +8,7 @@ const Sport = [
   "Swimming",
   "Tennis",
   "Volleyball",
-] as const;
+  ""
+] as const; 
 
 export default Sport;

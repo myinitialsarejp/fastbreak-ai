@@ -1,4 +1,4 @@
-const Venue = [
+export const Venue = [
   "Stadium",
   "Arena",
   "Field",

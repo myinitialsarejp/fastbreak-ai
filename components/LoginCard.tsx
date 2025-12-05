@@ -124,7 +124,7 @@ function LoginCard() {
             disabled={isEmailLoading}
             className="w-full"
           >
-            {isEmailLoading && <LoaderIcon className="animate-spin" />}
+            {isEmailLoading || isGoogleLoading&& <LoaderIcon className="animate-spin" />}
             Sign In with Email
           </Button>
           <div className="relative">
@@ -141,7 +141,7 @@ function LoginCard() {
             disabled={isGoogleLoading}
             className="w-full"
           >
-            {isGoogleLoading ? (
+            {isGoogleLoading || isEmailLoading ? (
               <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
             ) : (
               <img src="/google.svg.png" alt="Google" width={18} height={18} />
