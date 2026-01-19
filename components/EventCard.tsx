@@ -51,7 +51,7 @@ const EventCard = ({ editMode, event }: EventCardProps) => {
       eventName: "",
       sportType: "",
       date: "",
-      time: "",
+      time: "10:30:00",
       description: "",
       venues: [],
     },
@@ -155,11 +155,10 @@ const EventCard = ({ editMode, event }: EventCardProps) => {
                           Time
                         </Label>
                         <Input
-                          {...field}
+                          {...field }
                           type="time"
                           id="time-picker"
-                          step="1"
-                          defaultValue="10:30:00"
+                          step="1"  
                           className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                         />
                       </div>

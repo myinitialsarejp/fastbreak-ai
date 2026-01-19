@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "../styles/globals.css";
+import "@/app/globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,7 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Fastbreak AI",
-  description: "Sports event management app developed as a coding project for Fastbreak AI.  Developed by Jesse Pelletier.",
+  description:
+    "Sports event management app developed as a coding project for Fastbreak AI.  Developed by Jesse Pelletier.",
 };
 
 export default function RootLayout({
@@ -23,13 +24,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        style={{backgroundImage: "url('/fastbreak-background.jpeg')", backgroundSize: "cover", backgroundPosition: "center", top: 0}}
-      >
-        {children}
-      </body>
-    </html>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
+          style={{
+            backgroundImage: "url('/fastbreak-background.jpeg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundAttachment: "fixed",
+          }}
+        >
+          <div className="w-full min-h-screen flex items-center justify-center">
+            {children}
+          </div>
+        </body>
+      </html>
   );
 }

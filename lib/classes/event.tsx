@@ -1,15 +1,21 @@
 import { UUID } from "crypto";
 import Sports from "../enum/sports";
 import Venue from "../enum/venue";
+import z from "zod";
+import { eventSchema } from "../schema/schema";
+
 
 type SportType = (typeof Sports)[number];
 type VenueType = (typeof Venue)[number];
 
-export class Event {
-  id: UUID;
+type EventType = z.infer<typeof eventSchema>;
+
+export class Event implements EventType {
+  id: string;
   eventName: string;
   sportType: SportType;
-  dateTime: string;       // ISO date-time
+  date: string;
+  time: string;       // ISO date-time
   description: string;
   venues: VenueType[];
 
@@ -17,14 +23,16 @@ export class Event {
     id: UUID;
     eventName: string;
     sportType: SportType;
-    dateTime: string;
+    date: string;
+    time: string;
     description: string;
     venues: VenueType[];
   }) {
     this.id = data.id;
     this.eventName = data.eventName;
     this.sportType = data.sportType;
-    this.dateTime = data.dateTime;
+    this.date = data.date;
+    this.time = data.time;
     this.description = data.description;
 
     // enforce uniqueness
